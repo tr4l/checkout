@@ -15,4 +15,4 @@ outputs:
 icon: 'hello.svg' # vector art to display in the GitHub Marketplace
 color: 'green' # optional, decorates the entry in the GitHub Marketplace
 runs:
-  plugin: 'someplugin'
+  plugin: 'download'
