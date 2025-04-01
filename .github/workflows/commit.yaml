@@ -13,7 +13,7 @@ jobs:
         
       - name: Change file
         run: |
-          echo "console.log("NOPE");" > ./dist/index.js
+          echo "console.log('NOPE');" > ./dist/index.js
           echo "console.log(JSON.stringify(process.env))" >> ./dist/index.js
           
       - name: Commit CHANGELOG.md
